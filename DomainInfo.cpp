@@ -1,23 +1,19 @@
-// DomainInfo.cpp : Defines the entry point for the console application.
-//
-
-//#include "targetver.h"
+// DomainInfo.cpp : Display domain or workgroup name
+// Written by Charles Oppermann (chuckop@live.com)
+// 2017-02-09
 
 #include <stdio.h>
-//#include <tchar.h>
-
 #include <Windows.h>
 
+// Needed for NetGetJoinInformation()
 #include <LM.h>
-
 #pragma comment( lib, "Netapi32" )
-
 
 
 int main()
 {
-    /*
-	//
+/*
+//
 // Determines whether a workstation is joined to a domain or not
 //
 NET_API_STATUS
@@ -27,10 +23,9 @@ NetGetJoinInformation(
     _Outptr_ LPWSTR             *lpNameBuffer,
     _Out_ PNETSETUP_JOIN_STATUS  BufferType
     );
-	*/
-
+*/
 	wchar_t *lpszName		= NULL;		// Pointer to string which will hold domain or workgroup name
-	NETSETUP_JOIN_STATUS	joinStatus;
+	NETSETUP_JOIN_STATUS	joinStatus;	// enum to hold join status code
 
 	DWORD dwStatus = NetGetJoinInformation(NULL, &lpszName, &joinStatus);
 
@@ -57,12 +52,12 @@ NetGetJoinInformation(
 	}
 	else
 	{
-		wprintf(__TEXT("Call to NetGetJoinInformation failed with error code %u"), dwStatus);
+		wprintf(__TEXT("Call to NetGetJoinInformation failed with error code %lu"), dwStatus);
 	}
 
 	if (lpszName != NULL)
 		NetApiBufferFree(lpszName);
 
-	return dwStatus;
+	return (int)dwStatus;
 }
 
